@@ -1,0 +1,10 @@
+/.idea
+/.gradle
+/gradle
+/build
+
+gradlew
+gradlew.bat
+
+src/main/resources/credentials.properties
+
