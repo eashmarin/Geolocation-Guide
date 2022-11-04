@@ -29,7 +29,7 @@ public class LocationsRequestHandler extends SwingWorker<List<Location>, Void> {
         } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-    };
+    }
 
     @Override
     protected void done() {
@@ -38,7 +38,6 @@ public class LocationsRequestHandler extends SwingWorker<List<Location>, Void> {
             contentPanel.getLocationsPanel().setLocations(get());
             contentPanel.getLocationsPanel().removeButtonsSelection();
             contentPanel.showInfoPanels();
-            //contentPanel.addRadioButtonsListener(new RadioButtonListener(mainFrame));
             mainFrame.pack();
         } catch (InterruptedException | ExecutionException ex) {
             throw new RuntimeException(ex);

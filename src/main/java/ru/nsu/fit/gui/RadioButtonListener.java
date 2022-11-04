@@ -6,6 +6,7 @@ import ru.nsu.fit.gui.workers.WeatherRequestHandler;
 
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
+
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -29,15 +30,15 @@ public class RadioButtonListener implements ItemListener {
             for (LocationPanel resultPanel : locationsPanel.getLocationPanels()) {
                 if (resultPanel.getRadioButton().equals(radioButton)) {
                     searchButton.setEnabled(false);
-                    locationsPanel.getLocationPanels().forEach(x -> x.getRadioButton().setEnabled(false));
+                    locationsPanel.disableRadioButtons();
 
                     WeatherRequestHandler weatherRequestHandler = new WeatherRequestHandler(resultPanel.getlocation(), weatherPanel);
-                    AttractionsRequestHandler placesRequestHandler = new AttractionsRequestHandler(resultPanel.getlocation(), attractionsPanel);
+                    AttractionsRequestHandler attractionsRequestHandler = new AttractionsRequestHandler(resultPanel.getlocation(), attractionsPanel);
 
-                    placesRequestHandler.addPropertyChangeListener(new HandlerCompletionWaiter(locationsPanel.getLocationPanels(), searchButton));
+                    attractionsRequestHandler.addPropertyChangeListener(new HandlerCompletionWaiter(locationsPanel.getLocationPanels(), searchButton));
 
                     weatherRequestHandler.execute();
-                    placesRequestHandler.execute();
+                    attractionsRequestHandler.execute();
                 }
             }
         }

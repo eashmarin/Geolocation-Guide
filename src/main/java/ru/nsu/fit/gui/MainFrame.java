@@ -13,7 +13,7 @@ public class MainFrame extends JFrame {
     private static final int CONTENT_PANEL_HEIGHT = 520;
 
     private final SearchPanel searchPanel = new SearchPanel(WIDTH, SEARCH_PANEL_HEIGHT);
-    private final ContentPanel contentPanel = new ContentPanel(WIDTH, CONTENT_PANEL_HEIGHT, 10);
+    private final ContentPanel contentPanel = new ContentPanel(WIDTH, CONTENT_PANEL_HEIGHT);
 
     public MainFrame() {
         Container container = getContentPane();

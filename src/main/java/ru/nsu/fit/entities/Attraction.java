@@ -49,11 +49,6 @@ public class Attraction {
         this.dist = dist;
     }
 
-    @Override
-    public String toString() {
-        return String.format("%f %f %s %s %f", lng, lat, xid, name, dist);
-    }
-
     public AttractionDescription getDescription() {
         return description;
     }

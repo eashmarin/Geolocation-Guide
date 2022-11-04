@@ -1,6 +1,5 @@
 package ru.nsu.fit;
 
-import org.apache.logging.log4j.LogManager;
 import ru.nsu.fit.entities.Location;
 import ru.nsu.fit.entities.Attraction;
 import ru.nsu.fit.entities.AttractionDescription;
@@ -20,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 enum URLs {
     GRAPHHOPPER("https://graphhopper.com/api/1/geocode"),
     OPENWEATHER("https://api.openweathermap.org/data/2.5/weather"),
-    OPENTRIPMAP_PLACES("https://api.opentripmap.com/0.1/en/places/radius"),
+    OPENTRIPMAP_ATTRACTIONS("https://api.opentripmap.com/0.1/en/places/radius"),
     OPENTRIPMAP_DESCRIPTION("https://api.opentripmap.com/0.1/en/places/xid/");
 
     private final String url;
@@ -36,38 +35,37 @@ enum URLs {
 }
 
 public class RequestSender {
-    private static final HttpClient httpClient = HttpClient.newHttpClient();
-    private static final List<Attraction> places = new LinkedList<>();
+    private static final int LOCATIONS_LIMIT = OptionsParser.get("locations_limit");
+    private static final int ATTRACTIONS_LIMIT = OptionsParser.get("attractions_limit");
+    private static final int RADIUS = OptionsParser.get("radius");
 
-    public static List<Attraction> requestPlacesAndDescriptions(Location location) throws ExecutionException, InterruptedException {
-        List<AttractionDescription> descriptions = requestPlaces(location, 1000)
-                .thenApplyAsync(HttpResponse::body)
-                .thenApplyAsync(JsonParser::parsePlaces)
-                .thenApplyAsync(RequestSender::savePlaces)
-                .thenApplyAsync(RequestSender::requestDescriptions)
-                .thenApplyAsync(responses -> responses.stream().map(HttpResponse::body).toList())
-                .thenApplyAsync(JsonParser::parseDescriptions)
+    private static final HttpClient httpClient = HttpClient.newHttpClient();
+    private static final List<Attraction> attractionsList = new LinkedList<>();
+
+    public static List<Attraction> requestAttractionsAndDescriptions(Location location) throws ExecutionException, InterruptedException {
+        List<AttractionDescription> descriptions = requestAttractions(location)
+                .thenApply(HttpResponse::body)
+                .thenApply(JsonParser::parseAttractions)
+                .thenApply(RequestSender::saveAttractions)
+                .thenApply(RequestSender::requestDescriptions)
+                .thenApply(responses -> responses.stream().map(HttpResponse::body).toList())
+                .thenApply(JsonParser::parseDescriptions)
                 .get();
 
-        setPlacesDescriptions(descriptions);
+        linkDescriptionsToAttractions(descriptions);
 
-        return places;
+        return attractionsList;
     }
-
-    /*public static WeatherData requestAndParseWeather(Location location) throws ExecutionException, InterruptedException, IOException {
-        return ru.nsu.fit.JsonParser.parseWeather(requestWeatherLocation(location).body());
-    }*/
 
     public static CompletableFuture<HttpResponse<String>> requestLocationsVariants(String locationName) throws ExecutionException, InterruptedException {
         locationName = locationName.replaceAll(" ", "+");
 
-        String requestURIString = String.format("%s?q=%s&limit=10&key=%s",
+        String requestURIString = String.format("%s?q=%s&limit=%d&key=%s",
                 URLs.GRAPHHOPPER,
                 locationName,
-                Credentials.getKey("graphhopperKey")
+                LOCATIONS_LIMIT,
+                CredentialsParser.getKey("graphhopperKey")
         );
-
-        LogManager.getLogger().debug(requestURIString);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(requestURIString))
@@ -82,10 +80,8 @@ public class RequestSender {
                 URLs.OPENWEATHER,
                 location.getLat(),
                 location.getLat(),
-                Credentials.getKey("openweatherKey")
+                CredentialsParser.getKey("openweatherKey")
         );
-
-        System.out.println(requestURIString);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(requestURIString))
@@ -95,16 +91,15 @@ public class RequestSender {
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public static CompletableFuture<HttpResponse<String>> requestPlaces(Location location, int radius) {
-        String requestURIString = String.format("%s?limit=12&radius=%d&lon=%f&lat=%f&apikey=%s",
-                URLs.OPENTRIPMAP_PLACES,
-                radius,
+    private static CompletableFuture<HttpResponse<String>> requestAttractions(Location location) {
+        String requestURIString = String.format("%s?limit=%d&radius=%d&lon=%f&lat=%f&apikey=%s",
+                URLs.OPENTRIPMAP_ATTRACTIONS,
+                ATTRACTIONS_LIMIT,
+                RADIUS,
                 location.getLng(),
                 location.getLat(),
-                Credentials.getKey("opentripmapKey")
+                CredentialsParser.getKey("opentripmapKey")
         );
-
-        LogManager.getLogger().debug(requestURIString);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(requestURIString))
@@ -114,24 +109,23 @@ public class RequestSender {
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    private static List<Attraction> savePlaces(List<Attraction> places) {
-        RequestSender.places.clear();
+    private static List<Attraction> saveAttractions(List<Attraction> attractions) {
+        RequestSender.attractionsList.clear();
 
-        RequestSender.places.addAll(places);
+        RequestSender.attractionsList.addAll(attractions);
 
-        return RequestSender.places;
+        return RequestSender.attractionsList;
     }
 
-    private static List<HttpResponse<String>> requestDescriptions(List<Attraction> places) {
+    private static List<HttpResponse<String>> requestDescriptions(List<Attraction> attractions) {
         List<HttpResponse<String>> responseList = new LinkedList<>();
-        for (Attraction place : places) {
-            String requestURIString = String.format("%s%s?limit=12&apikey=%s",
+        for (Attraction attraction : attractions) {
+            String requestURIString = String.format("%s%s?limit=%d&apikey=%s",
                     URLs.OPENTRIPMAP_DESCRIPTION,
-                    place.getXid(),
-                    Credentials.getKey("opentripmapKey")
+                    attraction.getXid(),
+                    ATTRACTIONS_LIMIT,
+                    CredentialsParser.getKey("opentripmapKey")
             );
-
-            System.out.println(requestURIString);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(requestURIString))
@@ -139,7 +133,6 @@ public class RequestSender {
 
             try {
                 responseList.add(httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString()).get());
-                Thread.sleep(100);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
@@ -147,8 +140,8 @@ public class RequestSender {
         return responseList;
     }
 
-    private static void setPlacesDescriptions(List<AttractionDescription> descriptions) {
-        Iterator<Attraction> placeIterator = places.listIterator();
+    private static void linkDescriptionsToAttractions(List<AttractionDescription> descriptions) {
+        Iterator<Attraction> placeIterator = attractionsList.listIterator();
         Iterator<AttractionDescription> descriptionIterator = descriptions.listIterator();
 
         while (placeIterator.hasNext() && descriptionIterator.hasNext()) {

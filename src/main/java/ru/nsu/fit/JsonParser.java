@@ -1,6 +1,5 @@
 package ru.nsu.fit;
 
-import org.apache.logging.log4j.LogManager;
 import ru.nsu.fit.entities.Location;
 import ru.nsu.fit.entities.Attraction;
 import ru.nsu.fit.entities.AttractionDescription;
@@ -84,8 +83,8 @@ public class JsonParser {
         return weatherData;
     }
 
-    public static List<Attraction> parsePlaces(String jsonText) {
-        List<Attraction> places = new LinkedList<>();
+    public static List<Attraction> parseAttractions(String jsonText) {
+        List<Attraction> attractions = new LinkedList<>();
 
         JsonNode rootNode = null;
         try {
@@ -114,10 +113,10 @@ public class JsonParser {
             place.setName(propertiesNode.get("name").asText());
             place.setDist(propertiesNode.get("dist").asDouble());
 
-            places.add(place);
+            attractions.add(place);
         }
 
-        return places;
+        return attractions;
     }
 
     public static List<AttractionDescription> parseDescriptions(List<String> jsonDescriptions) {
@@ -125,7 +124,6 @@ public class JsonParser {
 
         try {
             for (String jsonDesc: jsonDescriptions) {
-                System.out.println(jsonDesc);
                 JsonNode node = mapper.readTree(jsonDesc).get("address");
 
                 if (node == null)
@@ -151,8 +149,6 @@ public class JsonParser {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
-        LogManager.getLogger().debug("descriptions = " + descriptions);
 
         return descriptions;
     }

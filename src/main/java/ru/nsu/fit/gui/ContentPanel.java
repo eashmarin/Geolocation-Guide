@@ -20,10 +20,10 @@ public class ContentPanel extends JPanel {
 
     private final Box sidePanelsBox = new Box(BoxLayout.Y_AXIS);
 
-    public ContentPanel(int width, int height, int limit) {
-        locationsPanel = new LocationsPanel((int) (width * 0.65), 500, limit);
+    public ContentPanel(int width, int height) {
+        locationsPanel = new LocationsPanel((int) (width * 0.65), 500);
         weatherPanel = new WeatherPanel(width - (int) (width * 0.65), 90);
-        attractionsPanel = new AttractionsPanel(width - (int) (width * 0.65), 405, limit);
+        attractionsPanel = new AttractionsPanel(width - (int) (width * 0.65), 405);
 
         initLabels();
         addSidePanelsToBox();

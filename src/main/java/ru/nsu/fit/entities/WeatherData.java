@@ -37,9 +37,4 @@ public class WeatherData {
     public void setWindSpeed(double windSpeed) {
         this.windSpeed = windSpeed;
     }
-
-    @Override
-    public String toString() {
-        return String.format("status: %s\ntemp: %.2f °C\nfeels like: %.2f °C\nwind speed: %.2f m/s", description, temp, feelsLike, windSpeed);
-    }
 }

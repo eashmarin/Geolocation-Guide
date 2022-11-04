@@ -1,5 +1,6 @@
 package ru.nsu.fit.gui;
 
+import ru.nsu.fit.OptionsParser;
 import ru.nsu.fit.entities.Attraction;
 
 import javax.swing.BoxLayout;
@@ -15,18 +16,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class AttractionsPanel extends JScrollPane {
+    private final int MAX_ATTRACTIONS_NUM = OptionsParser.get("attractions_limit");
 
-    private JPanel viewPanel = new JPanel();
-    private List<AttractionTextPane> placeRecords = new LinkedList<>();
+    private final JPanel viewPanel = new JPanel();
+    private final List<AttractionTextPane> attractionsList = new LinkedList<>();
 
-    public AttractionsPanel(int width, int height, int recordsLimit) {
+    public AttractionsPanel(int width, int height) {
         super(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.Y_AXIS));
 
-        for (int i = 0; i < recordsLimit; i++) {
+        for (int i = 0; i < MAX_ATTRACTIONS_NUM; i++) {
             AttractionTextPane panel = new AttractionTextPane();
-            placeRecords.add(panel);
+            attractionsList.add(panel);
             viewPanel.add(panel);
         }
 
@@ -39,9 +41,9 @@ public class AttractionsPanel extends JScrollPane {
         setPreferredSize(new Dimension(width, height));
     }
 
-    public void setPlaces(List<Attraction> places) {
-        Iterator<Attraction> placeIterator = places.listIterator();
-        Iterator<AttractionTextPane> recordsIterator = placeRecords.listIterator();
+    public void setPlaces(List<Attraction> attractions) {
+        Iterator<Attraction> placeIterator = attractions.listIterator();
+        Iterator<AttractionTextPane> recordsIterator = attractionsList.listIterator();
 
         while (placeIterator.hasNext() && recordsIterator.hasNext()) {
             AttractionTextPane panel = recordsIterator.next();

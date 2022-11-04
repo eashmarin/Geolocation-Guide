@@ -28,7 +28,7 @@ public class WeatherRequestHandler extends SwingWorker<WeatherData, Void> {
         } catch (ExecutionException | IOException | InterruptedException ex) {
             throw new RuntimeException(ex);
         }
-    };
+    }
 
     @Override
     protected void done() {

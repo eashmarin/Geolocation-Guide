@@ -13,19 +13,19 @@ public class AttractionsRequestHandler extends SwingWorker<List<Attraction>, Voi
     private final Location location;
     private final AttractionsPanel infoPanel;
 
-    public AttractionsRequestHandler(Location location, AttractionsPanel placesPanel) {
+    public AttractionsRequestHandler(Location location, AttractionsPanel attractionsPanel) {
         this.location = location;
-        this.infoPanel = placesPanel;
+        this.infoPanel = attractionsPanel;
     }
 
     @Override
     protected List<Attraction> doInBackground() {
         try {
-            return RequestSender.requestPlacesAndDescriptions(location);
+            return RequestSender.requestAttractionsAndDescriptions(location);
         } catch (ExecutionException | InterruptedException ex) {
             throw new RuntimeException(ex);
         }
-    };
+    }
 
     @Override
     protected void done() {
