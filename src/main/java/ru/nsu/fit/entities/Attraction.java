@@ -1,11 +1,13 @@
-public class Place {
+package ru.nsu.fit.entities;
+
+public class Attraction {
     private double lng;
     private double lat;
     private String xid;
     private String name;
     private double dist;
 
-    private PlaceDescription description;
+    private AttractionDescription description;
 
     public double getLng() {
         return lng;
@@ -52,11 +54,11 @@ public class Place {
         return String.format("%f %f %s %s %f", lng, lat, xid, name, dist);
     }
 
-    public PlaceDescription getDescription() {
+    public AttractionDescription getDescription() {
         return description;
     }
 
-    public void setDescription(PlaceDescription description) {
+    public void setDescription(AttractionDescription description) {
         this.description = description;
     }
 }

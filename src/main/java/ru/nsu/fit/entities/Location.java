@@ -1,8 +1,11 @@
+package ru.nsu.fit.entities;
+
 public class Location {
     private double lat;
     private double lng;
     private String name;
     private String country;
+    private String city;
 
     public String getName() {
         return name;
@@ -34,5 +37,13 @@ public class Location {
 
     public void setLat(double lat) {
         this.lat = lat;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

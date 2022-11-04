@@ -1,3 +1,10 @@
+package ru.nsu.fit;
+
+import org.apache.logging.log4j.LogManager;
+import ru.nsu.fit.entities.Location;
+import ru.nsu.fit.entities.Attraction;
+import ru.nsu.fit.entities.AttractionDescription;
+import ru.nsu.fit.entities.WeatherData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,11 +39,18 @@ public class JsonParser {
             Location location = new Location();
 
             JsonNode pointNode = node.get("point");
-            location.setLng(Double.parseDouble(pointNode.get("lng").toString()));
-            location.setLat(Double.parseDouble(pointNode.get("lat").toString()));
+            location.setLng(pointNode.get("lng").asDouble());
+            location.setLat(pointNode.get("lat").asDouble());
 
-            location.setCountry(node.get("country").toString());
-            location.setName(node.get("name").toString());
+
+            if (node.get("country") != null)
+                location.setCountry(node.get("country").asText());
+
+            if (node.get("city") != null) {
+                location.setCity(node.get("city").asText());
+            }
+
+            location.setName(node.get("name").asText());
 
             locations.add(location);
         }
@@ -54,10 +68,10 @@ public class JsonParser {
              JsonNode mainNode = rootNode.get("main");
              JsonNode windNode = rootNode.get("wind");
 
-             String description = weatherNode.elements().next().get("description").toString();
-             double temp = Double.parseDouble(mainNode.get("temp").toString());
-             double feelsLike = Double.parseDouble(mainNode.get("feels_like").toString());
-             double windSpeed = Double.parseDouble(windNode.get("speed").toString());
+             String description = weatherNode.elements().next().get("description").asText();
+             double temp = mainNode.get("temp").asDouble();
+             double feelsLike = mainNode.get("feels_like").asDouble();
+             double windSpeed = windNode.get("speed").asDouble();
 
              weatherData.setDescription(description);
              weatherData.setTemp(temp);
@@ -70,8 +84,8 @@ public class JsonParser {
         return weatherData;
     }
 
-    public static List<Place> parsePlaces(String jsonText) {
-        List<Place> places = new LinkedList<>();
+    public static List<Attraction> parsePlaces(String jsonText) {
+        List<Attraction> places = new LinkedList<>();
 
         JsonNode rootNode = null;
         try {
@@ -85,7 +99,10 @@ public class JsonParser {
         while (iterator.hasNext()) {
             JsonNode featureNode = iterator.next();
 
-            Place place = new Place();
+            Attraction place = new Attraction();
+
+            if (featureNode.get("error") != null)
+                continue;
 
             JsonNode coordsNode = featureNode.get("geometry").get("coordinates");
             Iterator<JsonNode> coordsIterator = coordsNode.elements();
@@ -94,7 +111,7 @@ public class JsonParser {
 
             JsonNode propertiesNode = featureNode.get("properties");
             place.setXid(propertiesNode.get("xid").asText());
-            place.setName(propertiesNode.get("name").toString());
+            place.setName(propertiesNode.get("name").asText());
             place.setDist(propertiesNode.get("dist").asDouble());
 
             places.add(place);
@@ -103,29 +120,39 @@ public class JsonParser {
         return places;
     }
 
-    public static List<PlaceDescription> parseDescriptions(List<String> jsonDescriptions) {
-        List<PlaceDescription> descriptions = new LinkedList<>();
+    public static List<AttractionDescription> parseDescriptions(List<String> jsonDescriptions) {
+        List<AttractionDescription> descriptions = new LinkedList<>();
 
         try {
             for (String jsonDesc: jsonDescriptions) {
                 System.out.println(jsonDesc);
                 JsonNode node = mapper.readTree(jsonDesc).get("address");
 
-                PlaceDescription description = new PlaceDescription();
+                if (node == null)
+                    continue;
 
-                description.setRoad(node.get("road").asText());
-                description.setState(node.get("state").asText());
-                description.setSuburb(node.get("suburb").asText());
-                description.setState(node.get("state").asText());
-                description.setPostcode(node.get("postcode").asInt());
-                description.setHouseNumber(node.get("house_number").asInt());
-                description.setCityDistrict(node.get("city_district").asText());
+                AttractionDescription description = new AttractionDescription();
+
+                if (node.get("road") != null)
+                    description.setRoad(node.get("road").asText());
+                if (node.get("state") != null)
+                    description.setState(node.get("state").asText());
+                if (node.get("suburb") != null)
+                    description.setSuburb(node.get("suburb").asText());
+                if (node.get("postcode") != null)
+                    description.setPostcode(node.get("postcode").asInt());
+                if (node.get("house_number") != null)
+                    description.setHouseNumber(node.get("house_number").asText());
+                if (node.get("city_district") != null)
+                    description.setCityDistrict(node.get("city_district").asText());
 
                 descriptions.add(description);
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+
+        LogManager.getLogger().debug("descriptions = " + descriptions);
 
         return descriptions;
     }

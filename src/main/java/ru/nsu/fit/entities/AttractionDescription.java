@@ -1,10 +1,12 @@
-public class PlaceDescription {
-    private String road;
-    private String state;
-    private String suburb;
+package ru.nsu.fit.entities;
+
+public class AttractionDescription {
+    private String road = "";
+    private String state = "";
+    private String suburb = "";
     private int postcode;
-    private int houseNumber;
-    private String cityDistrict;
+    private String houseNumber = "";
+    private String cityDistrict = "";
 
     public String getRoad() {
         return road;
@@ -38,11 +40,11 @@ public class PlaceDescription {
         this.postcode = postcode;
     }
 
-    public int getHouseNumber() {
+    public String getHouseNumber() {
         return houseNumber;
     }
 
-    public void setHouseNumber(int houseNumber) {
+    public void setHouseNumber(String houseNumber) {
         this.houseNumber = houseNumber;
     }
 

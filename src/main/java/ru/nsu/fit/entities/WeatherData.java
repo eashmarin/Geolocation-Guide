@@ -1,3 +1,5 @@
+package ru.nsu.fit.entities;
+
 public class WeatherData {
     private String description;
     private double temp;
@@ -38,6 +40,6 @@ public class WeatherData {
 
     @Override
     public String toString() {
-        return description + " " + temp + " " + feelsLike + " " + windSpeed;
+        return String.format("status: %s\ntemp: %.2f °C\nfeels like: %.2f °C\nwind speed: %.2f m/s", description, temp, feelsLike, windSpeed);
     }
 }
