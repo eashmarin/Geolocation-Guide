@@ -33,6 +33,7 @@ public class LocationPanel extends JPanel {
 
         radioButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         radioButton.setAlignmentY(Component.CENTER_ALIGNMENT);
+        radioButton.setBackground(Color.WHITE);
 
         add(radioButton);
         add(Box.createHorizontalGlue());

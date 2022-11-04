@@ -8,7 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-
+import java.awt.Font;
 import java.awt.event.ActionListener;
 
 public class SearchPanel extends JPanel {
@@ -22,8 +22,9 @@ public class SearchPanel extends JPanel {
 
         inputField.setPreferredSize(new Dimension(width / 2, (int) (height / 1.5)));
         inputField.setHorizontalAlignment(JTextField.CENTER);
+        inputField.setFont(new Font(getFont().getFontName(), Font.PLAIN, 16));
 
-        searchButton.setPreferredSize(new Dimension(60, (int) (height / 1.5)));
+        searchButton.setPreferredSize(new Dimension(80, (int) (height / 1.5)));
 
         add(inputField, BorderLayout.CENTER);
         add(searchButton);

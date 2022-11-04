@@ -34,6 +34,8 @@ public class AttractionsPanel extends JScrollPane {
         viewPanel.setVisible(false);
 
         setViewportView(viewPanel);
+
+        setBackground(Color.WHITE);
         setPreferredSize(new Dimension(width, height));
     }
 

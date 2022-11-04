@@ -45,9 +45,9 @@ public class WeatherPanel extends JTextPane {
             document.insertString(document.getLength(), "Status: ", keysAttributes);
             document.insertString(document.getLength(), weatherData.getDescription() + "\n", valuesAttributes);
             document.insertString(document.getLength(), "Temperature: ", keysAttributes);
-            document.insertString(document.getLength(), weatherData.getTemp() + " °C\n", valuesAttributes);
+            document.insertString(document.getLength(), weatherData.getTemp() + " \u00B0" + "C\n", valuesAttributes);
             document.insertString(document.getLength(), "Feels like: ", keysAttributes);
-            document.insertString(document.getLength(), weatherData.getFeelsLike() + " °C\n", valuesAttributes);
+            document.insertString(document.getLength(), weatherData.getFeelsLike() + " \u00B0" + "C\n", valuesAttributes);
             document.insertString(document.getLength(), "Wind speed: ", keysAttributes);
             document.insertString(document.getLength(), weatherData.getWindSpeed() + " m/s", valuesAttributes);
         } catch (BadLocationException e) {
