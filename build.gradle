@@ -1,21 +1,23 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'java'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'ru.nsu.fit'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.2'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.19.0'
 }
 
-test {
-    useJUnitPlatform()
+shadowJar {
+    getDestinationDirectory().set(new File(projectDir, ""))
+    archiveClassifier = ""
+    manifest {
+        attributes 'Main-Class': 'ru.nsu.fit.Main'
+    }
 }
+
