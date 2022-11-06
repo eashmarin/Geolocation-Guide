@@ -5,9 +5,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 
 public class ContentPanel extends JPanel {
     private final LocationsPanel locationsPanel;
@@ -21,9 +19,13 @@ public class ContentPanel extends JPanel {
     private final Box sidePanelsBox = new Box(BoxLayout.Y_AXIS);
 
     public ContentPanel(int width, int height) {
-        locationsPanel = new LocationsPanel((int) (width * 0.65), 500);
-        weatherPanel = new WeatherPanel(width - (int) (width * 0.65), 90);
-        attractionsPanel = new AttractionsPanel(width - (int) (width * 0.65), 405);
+        int locationsPanelWidth = (int) (width * 0.6);
+
+        locationsPanel = new LocationsPanel(locationsPanelWidth, 500);
+        weatherPanel = new WeatherPanel(width - locationsPanelWidth, 90);
+        attractionsPanel = new AttractionsPanel(width - locationsPanelWidth, 405);
+
+        sidePanelsBox.setMaximumSize(new Dimension(width - locationsPanelWidth, Integer.MAX_VALUE));
 
         initLabels();
         addSidePanelsToBox();

@@ -10,17 +10,19 @@ import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class AttractionTextPane extends JTextPane {
     private final SimpleAttributeSet headersAttributes = new SimpleAttributeSet();
     private final SimpleAttributeSet keysAttributes = new SimpleAttributeSet();
     private final SimpleAttributeSet valuesAttributes = new SimpleAttributeSet();
 
-    public AttractionTextPane() {
+    public AttractionTextPane(int width, int height) {
         initAttributes();
         setEditable(false);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        setMaximumSize(new Dimension(width, height));
+        setBackground(Color.WHITE);
         setVisible(false);
     }
 
@@ -38,24 +40,31 @@ public class AttractionTextPane extends JTextPane {
 
     }
 
-    public void setPlace(Attraction place) {
+    public void insertAttractionText(Attraction attraction) {
         setText("");
         Document document = getDocument();
 
         try {
-            document.insertString(document.getLength(), place.getName() + "\n", headersAttributes);
+            document.insertString(document.getLength(), attraction.getName() + "\n", headersAttributes);
             document.insertString(document.getLength(), "distance: ", keysAttributes);
-            document.insertString(document.getLength(), String.valueOf(place.getDist()), valuesAttributes);
-            if (place.getDescription() != null) {
-                AttractionDescription desc = place.getDescription();
-                document.insertString(document.getLength(), "\naddress: ", keysAttributes);
-                document.insertString(document.getLength(), desc.getRoad() + " " + desc.getHouseNumber()  + "\n", valuesAttributes);
-                document.insertString(document.getLength(), "state: ", keysAttributes);
-                document.insertString(document.getLength(), place.getDescription().getState() + "\n", valuesAttributes);
-                document.insertString(document.getLength(), "suburb: ", keysAttributes);
-                document.insertString(document.getLength(), place.getDescription().getSuburb() + "\n", valuesAttributes);
+            document.insertString(document.getLength(), String.valueOf(attraction.getDist()), valuesAttributes);
+            if (attraction.getDescription() != null) {
+                AttractionDescription desc = attraction.getDescription();
+                document.insertString(document.getLength(), "\n", keysAttributes);
+                if (!desc.getRoad().equals("") && !desc.getHouseNumber().equals("")) {
+                    document.insertString(document.getLength(), "address: ", keysAttributes);
+                    document.insertString(document.getLength(), desc.getRoad() + " " + desc.getHouseNumber() + "\n", valuesAttributes);
+                }
+                if (!attraction.getDescription().getState().equals("")) {
+                    document.insertString(document.getLength(), "state: ", keysAttributes);
+                    document.insertString(document.getLength(), attraction.getDescription().getState() + "\n", valuesAttributes);
+                }
+                if (!attraction.getDescription().getSuburb().equals("")) {
+                    document.insertString(document.getLength(), "suburb: ", keysAttributes);
+                    document.insertString(document.getLength(), attraction.getDescription().getSuburb() + "\n", valuesAttributes);
+                }
                 document.insertString(document.getLength(), "postcode: ", keysAttributes);
-                document.insertString(document.getLength(), String.valueOf(place.getDescription().getPostcode()), valuesAttributes);
+                document.insertString(document.getLength(), String.valueOf(attraction.getDescription().getPostcode()), valuesAttributes);
             }
         } catch (BadLocationException e) {
             throw new RuntimeException(e);

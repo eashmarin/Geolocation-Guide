@@ -38,7 +38,6 @@ public class LocationsRequestHandler extends SwingWorker<List<Location>, Void> {
             contentPanel.getLocationsPanel().setLocations(get());
             contentPanel.getLocationsPanel().removeButtonsSelection();
             contentPanel.showInfoPanels();
-            mainFrame.pack();
         } catch (InterruptedException | ExecutionException ex) {
             throw new RuntimeException(ex);
         }

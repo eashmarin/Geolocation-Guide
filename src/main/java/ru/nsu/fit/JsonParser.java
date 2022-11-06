@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -98,22 +99,22 @@ public class JsonParser {
         while (iterator.hasNext()) {
             JsonNode featureNode = iterator.next();
 
-            Attraction place = new Attraction();
+            Attraction attraction = new Attraction();
 
             if (featureNode.get("error") != null)
                 continue;
 
             JsonNode coordsNode = featureNode.get("geometry").get("coordinates");
             Iterator<JsonNode> coordsIterator = coordsNode.elements();
-            place.setLng(coordsIterator.next().asDouble());
-            place.setLat(coordsIterator.next().asDouble());
+            attraction.setLng(coordsIterator.next().asDouble());
+            attraction.setLat(coordsIterator.next().asDouble());
 
             JsonNode propertiesNode = featureNode.get("properties");
-            place.setXid(propertiesNode.get("xid").asText());
-            place.setName(propertiesNode.get("name").asText());
-            place.setDist(propertiesNode.get("dist").asDouble());
+            attraction.setXid(propertiesNode.get("xid").asText());
+            attraction.setName(propertiesNode.get("name").asText());
+            attraction.setDist(propertiesNode.get("dist").asDouble());
 
-            attractions.add(place);
+            attractions.add(attraction);
         }
 
         return attractions;

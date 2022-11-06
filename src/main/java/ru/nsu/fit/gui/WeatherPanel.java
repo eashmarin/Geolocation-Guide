@@ -26,6 +26,7 @@ public class WeatherPanel extends JTextPane {
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         setPreferredSize(new Dimension(width, height));
+        setMaximumSize(new Dimension(width, height));
         setVisible(false);
     }
 

@@ -30,7 +30,7 @@ public class AttractionsRequestHandler extends SwingWorker<List<Attraction>, Voi
     @Override
     protected void done() {
         try {
-            infoPanel.setPlaces(get());
+            infoPanel.setAttractions(get());
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }

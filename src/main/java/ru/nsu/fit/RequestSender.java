@@ -141,11 +141,11 @@ public class RequestSender {
     }
 
     private static void linkDescriptionsToAttractions(List<AttractionDescription> descriptions) {
-        Iterator<Attraction> placeIterator = attractionsList.listIterator();
+        Iterator<Attraction> attractionIterator = attractionsList.listIterator();
         Iterator<AttractionDescription> descriptionIterator = descriptions.listIterator();
 
-        while (placeIterator.hasNext() && descriptionIterator.hasNext()) {
-            placeIterator.next().setDescription(descriptionIterator.next());
+        while (attractionIterator.hasNext() && descriptionIterator.hasNext()) {
+            attractionIterator.next().setDescription(descriptionIterator.next());
         }
     }
 }

@@ -3,10 +3,7 @@ package ru.nsu.fit.gui;
 import ru.nsu.fit.OptionsParser;
 import ru.nsu.fit.entities.Attraction;
 
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,34 +22,37 @@ public class AttractionsPanel extends JScrollPane {
         super(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         viewPanel.setLayout(new BoxLayout(viewPanel, BoxLayout.Y_AXIS));
+        setPreferredSize(new Dimension(width, height));
+        setSize(new Dimension(width, height));
 
         for (int i = 0; i < MAX_ATTRACTIONS_NUM; i++) {
-            AttractionTextPane panel = new AttractionTextPane();
+            AttractionTextPane panel = new AttractionTextPane(Integer.MAX_VALUE, 100);
             attractionsList.add(panel);
             viewPanel.add(panel);
+            //viewPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         }
 
         viewPanel.setBackground(Color.WHITE);
-        viewPanel.setVisible(false);
+        viewPanel.setVisible(true);
 
         setViewportView(viewPanel);
 
         setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(width, height));
     }
 
-    public void setPlaces(List<Attraction> attractions) {
-        Iterator<Attraction> placeIterator = attractions.listIterator();
+    public void setAttractions(List<Attraction> attractions) {
+        Iterator<Attraction> attractionIterator = attractions.listIterator();
         Iterator<AttractionTextPane> recordsIterator = attractionsList.listIterator();
 
-        while (placeIterator.hasNext() && recordsIterator.hasNext()) {
+        while (attractionIterator.hasNext() && recordsIterator.hasNext()) {
             AttractionTextPane panel = recordsIterator.next();
-            panel.setPlace(placeIterator.next());
+            panel.insertAttractionText(attractionIterator.next());
             panel.setVisible(true);
         }
 
         while (recordsIterator.hasNext()) {
             recordsIterator.next().setVisible(false);
         }
+        repaint();
     }
 }

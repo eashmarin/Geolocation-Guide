@@ -11,20 +11,18 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 
 public class HandlerCompletionWaiter implements PropertyChangeListener {
-    private final List<LocationPanel> panelList;
+    private final List<LocationPanel> locationPanels;
     private final JButton searchButton;
 
-    public HandlerCompletionWaiter(List<LocationPanel> panelList, JButton searchButton) {
-        this.panelList = panelList;
+    public HandlerCompletionWaiter(List<LocationPanel> locationPanels, JButton searchButton) {
+        this.locationPanels = locationPanels;
         this.searchButton = searchButton;
     }
 
     public void propertyChange(PropertyChangeEvent event) {
-        if ("state".equals(event.getPropertyName())
-                && SwingWorker.StateValue.DONE == event.getNewValue()) {
-
+        if ("state".equals(event.getPropertyName()) && SwingWorker.StateValue.DONE == event.getNewValue()) {
             searchButton.setEnabled(true);
-            panelList.forEach(x -> x.getRadioButton().setEnabled(true));
+            locationPanels.forEach(x -> x.getRadioButton().setEnabled(true));
         }
     }
 }

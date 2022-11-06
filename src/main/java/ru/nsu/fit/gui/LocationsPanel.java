@@ -43,7 +43,6 @@ public class LocationsPanel extends JScrollPane {
             locationPanels.add(locationPanel);
 
             viewPanel.add(locationPanel);
-            viewPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
             buttonGroup.add(locationPanel.getRadioButton());
         }

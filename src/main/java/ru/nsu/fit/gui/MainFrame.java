@@ -28,6 +28,9 @@ public class MainFrame extends JFrame {
         pack();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        setResizable(false);
+        setTitle("Geolocation-Guide");
         setVisible(true);
     }
 
