@@ -29,6 +29,10 @@ public class JsonParser {
             e.printStackTrace();
         }
 
+        if (rootNode == null) {
+            return Collections.emptyList();
+        }
+
         List<Location> locations = new LinkedList<>();
 
         Iterator<JsonNode> iterator = rootNode.elements();
@@ -94,8 +98,9 @@ public class JsonParser {
             e.printStackTrace();
         }
 
-        if (rootNode == null)
+        if (rootNode == null) {
             return Collections.emptyList();
+        }
 
         Iterator<JsonNode> iterator = rootNode.elements();
 
