@@ -94,6 +94,9 @@ public class JsonParser {
             e.printStackTrace();
         }
 
+        if (rootNode == null)
+            return Collections.emptyList();
+
         Iterator<JsonNode> iterator = rootNode.elements();
 
         while (iterator.hasNext()) {
