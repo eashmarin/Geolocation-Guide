@@ -1,0 +1,23 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'java'
+}
+
+group 'ru.nsu.fit'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.2'
+}
+
+shadowJar {
+    getDestinationDirectory().set(new File(projectDir, ""))
+    archiveClassifier = ""
+    manifest {
+        attributes 'Main-Class': 'ru.nsu.fit.Main'
+    }
+}
+
