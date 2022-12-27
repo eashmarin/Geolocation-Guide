@@ -12,7 +12,8 @@
 ## Installation
 1. Download repository
 2. Move to project folder
-2. Launch jar file by double-clicking it or use console:
-```
-java -jar Geolocation-Guide.jar
-```
+3. Insert your APIs keys into *credentials.properties*
+4. Launch jar file by double-clicking it or use console:
+  ```
+  java -jar Geolocation-Guide.jar
+  ```
